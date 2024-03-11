@@ -2,34 +2,43 @@ const test = require('node:test');
 const assert = require('assert');
 const { MyClass, Student } = require('./main');
 
-test('Test MyClass\'s addStudent', () => {
+test("Test MyClass's addStudent", () => {
     const myClass = new MyClass();
     const student = new Student();
-    student.setName("Test Student");
+    student.setName('John Doe');
     const index = myClass.addStudent(student);
-    assert.strictEqual(index, 0); // 應該正確添加學生並返回索引0
+    assert.strictEqual(index, 0); // 應該成功添加並返回索引 0
 
-    const invalidStudent = {};
-    const invalidIndex = myClass.addStudent(invalidStudent);
-    assert.strictEqual(invalidIndex, -1); // 傳入非Student實例應返回-1
+    const nonStudent = {}; // 非 Student 實例
+    const wrongIndex = myClass.addStudent(nonStudent);
+    assert.strictEqual(wrongIndex, -1); // 嘗試添加非 Student 實例應返回 -1
 });
 
-
-test('Test Student\'s setName', () => {
+test("Test MyClass's getStudentById", () => {
+    const myClass = new MyClass();
     const student = new Student();
-    student.setName("Test Student");
-    assert.strictEqual(student.name, "Test Student"); // 設置的名字應該符合預期
+    student.setName('Jane Doe');
+    const index = myClass.addStudent(student);
+    const retrievedStudent = myClass.getStudentById(index);
+    assert.strictEqual(retrievedStudent, student); // 應該返回相同的學生實例
 
-    student.setName(123); // 傳入非字符串應不修改名字
-    assert.strictEqual(student.name, "Test Student"); // 名字應該保持不變
+    const nullStudent = myClass.getStudentById(-1); // 錯誤的索引
+    assert.strictEqual(nullStudent, null); // 應該返回 null
 });
 
-
-
-test('Test Student\'s getName', () => {
+test("Test Student's setName", () => {
     const student = new Student();
-    assert.strictEqual(student.getName(), ''); // 應該返回空字符串，因為名字未設置
+    student.setName('John Doe');
+    assert.strictEqual(student.getName(), 'John Doe'); // setName 後 getName 應該返回設置的名字
 
-    student.setName("Test Student");
-    assert.strictEqual(student.getName(), "Test Student"); // 設置名字後應該返回設置的名字
+    student.setName(123); // 嘗試設置非字串
+    assert.strictEqual(student.getName(), 'John Doe'); // 名字應該保持不變
+});
+
+test("Test Student's getName", () => {
+    const student = new Student();
+    assert.strictEqual(student.getName(), ''); // 如果名字未設置應返回空字串
+
+    student.setName('Jane Doe');
+    assert.strictEqual(student.getName(), 'Jane Doe'); // setName 後 getName 應該返回設置的名字
 });
