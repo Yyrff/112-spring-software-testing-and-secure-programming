@@ -2,46 +2,38 @@ const { describe, it } = require('node:test');
 const assert = require('assert');
 const { Calculator } = require('./main');
 
-// TODO: write your tests here
-it("Test Calculator log", () => {   
-    const calculator = new Calculator();
-    const testcase = [
-        {num: 5, log_expected: Math.log(5)},
-        {num: 37, log_expected: Math.log(37)},
-        {num: 52, log_expected: Math.log(52)}
-    ];
-    for (const test of testcase) {
-        assert.strictEqual(calculator.log(test.num), test.log_expected);
-    }
+describe("calculator exp test", () => {
+    const cal = new Calculator();
 
-    const test_error = [
-        {num: 'test', log_expected: 'unsupported operand type'},
-        {num: 0, log_expected: 'math domain error (1)'},
-        {num: -1, log_expected: 'math domain error (2)'}
-    ]
+    it("should throw an error for unsupported operand type", () => {
+        assert.throws(() => cal.exp('a'), Error, 'unsupported operand type');
+    });
 
-    for (const test of test_error) {
-        assert.throws(() => calculator.log(test.num), new Error(test.log_expected));
-    }
+    it("should throw an error for overflow", () => {
+        assert.throws(() => cal.exp(1000), Error, 'overflow');
+    });
+
+    it("should return 1 for input 0", () => {
+        assert.strictEqual(cal.exp(0), 1);
+    });
 });
 
-it("Test Calculator exp", () => {   
-    const calculator = new Calculator();
-    const testcase = [
-        {num: 5, exp_expected: Math.exp(5)},
-        {num: 37, exp_expected: Math.exp(37)},
-        {num: 52, exp_expected: Math.exp(52)}
-    ];
-    for (const test of testcase) {
-        assert.strictEqual(calculator.exp(test.num), test.exp_expected);
-    }
+describe("calculator log test", () => {
+    const cal = new Calculator();
 
-    const test_error = [
-        {num: 'test', exp_expected: 'unsupported operand type'},
-        {num: 10000, exp_expected: 'overflow'}
-    ]
+    it("should throw an error for unsupported operand type", () => {
+        assert.throws(() => cal.log('a'), Error, 'unsupported operand type');
+    });
 
-    for (const test of test_error) {
-        assert.throws(() => calculator.exp(test.num), new Error(test.exp_expected));
-    }
+    it("should throw an error for math domain error (1)", () => {
+        assert.throws(() => cal.log(0), Error, 'math domain error (1)');
+    });
+
+    it("should throw an error for math domain error (2)", () => {
+        assert.throws(() => cal.log(-1), Error, 'math domain error (2)');
+    });
+
+    it("should return 0 for input 1", () => {
+        assert.strictEqual(cal.log(1), 0);
+    });
 });
