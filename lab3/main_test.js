@@ -2,38 +2,52 @@ const { describe, it } = require('node:test');
 const assert = require('assert');
 const { Calculator } = require('./main');
 
-describe("calculator exp test", () => {
-    const cal = new Calculator();
+function generateTestCaseExp(param, expectedResult, error = null) {
+    return { param, expectedResult, error };
+}
 
-    it("should throw an error for unsupported operand type", () => {
-        assert.throws(() => cal.exp('a'), Error, 'unsupported operand type');
+
+function generateTestCaseLog(param, expectedResult, error = null) {
+    return { param, expectedResult, error };
+}
+
+
+describe('Calculator Exponential and Logarithmic Functions', () => {
+    const calculator = new Calculator();
+
+    it('should calculate exponential values correctly', () => {
+        const testCases = [
+            generateTestCaseExp(1, Math.exp(1)),
+            generateTestCaseExp(2, Math.exp(2)),
+            generateTestCaseExp(Number.MAX_VALUE, Error, 'overflow'),
+            generateTestCaseExp(null, Error, 'unsupported operand type'),
+            generateTestCaseExp('ABC', Error, 'unsupported operand type')
+        ];
+
+        for (const { param, expectedResult, error } of testCases) {
+            const assertion = expectedResult === Error ?
+                () => assert.throws(() => calculator.exp(param), { name: 'Error', message: error }) :
+                () => assert.strictEqual(calculator.exp(param), expectedResult);
+
+            assertion();
+        }
     });
 
-    it("should throw an error for overflow", () => {
-        assert.throws(() => cal.exp(1000), Error, 'overflow');
-    });
+    it('should calculate logarithmic values correctly', () => {
+        const testCases = [
+            generateTestCaseLog(1, 0),
+            generateTestCaseLog(0, Error, 'math domain error (1)'),
+            generateTestCaseLog(-2, Error, 'math domain error (2)'),
+            generateTestCaseLog(null, Error, 'unsupported operand type'),
+            generateTestCaseLog('ABC', Error, 'unsupported operand type')
+        ];
 
-    it("should return 1 for input 0", () => {
-        assert.strictEqual(cal.exp(0), 1);
-    });
-});
+        for (const { param, expectedResult, error } of testCases) {
+            const assertion = expectedResult === Error ?
+                () => assert.throws(() => calculator.log(param), { name: 'Error', message: error }) :
+                () => assert.strictEqual(calculator.log(param), expectedResult);
 
-describe("calculator log test", () => {
-    const cal = new Calculator();
-
-    it("should throw an error for unsupported operand type", () => {
-        assert.throws(() => cal.log('a'), Error, 'unsupported operand type');
-    });
-
-    it("should throw an error for math domain error (1)", () => {
-        assert.throws(() => cal.log(0), Error, 'math domain error (1)');
-    });
-
-    it("should throw an error for math domain error (2)", () => {
-        assert.throws(() => cal.log(-1), Error, 'math domain error (2)');
-    });
-
-    it("should return 0 for input 1", () => {
-        assert.strictEqual(cal.log(1), 0);
+            assertion();
+        }
     });
 });
