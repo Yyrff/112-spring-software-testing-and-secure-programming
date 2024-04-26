@@ -3,45 +3,69 @@ const assert = require('assert');
 const { Calculator } = require('./main');
 
 // TODO: write your tests here
-it("Test Calculator log", () => {   
-    const calculator = new Calculator();
-    const testcase = [
-        {num: 5, log_expected: Math.log(5)},
-        {num: 37, log_expected: Math.log(37)},
-        {num: 52, log_expected: Math.log(52)}
+
+describe('Calculator', function() {
+  const calculator = new Calculator();
+
+  // 定義針對 exp 功能的測試組合
+  describe('#exp()', function() {
+    // 針對預期正確的參數測試
+    const testCasesExp = [
+      { input: 1.618, expected: Math.exp(1.618) }, // 黃金分割率
+      { input: 0, expected: Math.exp(0) },
+      { input: -1, expected: Math.exp(-1) }
     ];
-    for (const test of testcase) {
-        assert.strictEqual(calculator.log(test.num), test.log_expected);
-    }
 
-    const test_error = [
-        {num: 'test', log_expected: 'unsupported operand type'},
-        {num: 0, log_expected: 'math domain error (1)'},
-        {num: -1, log_expected: 'math domain error (2)'}
-    ]
+    // for 進行測試
+    testCasesExp.forEach(({ input, expected }) => {
+      it(`should correctly calculate exp(${input})`, function() {
+        assert.strictEqual(calculator.exp(input), expected);
+      });
+    });
 
-    for (const test of test_error) {
-        assert.throws(() => calculator.log(test.num), new Error(test.log_expected));
-    }
-});
-
-it("Test Calculator exp", () => {   
-    const calculator = new Calculator();
-    const testcase = [
-        {num: 5, exp_expected: Math.exp(5)},
-        {num: 37, exp_expected: Math.exp(37)},
-        {num: 52, exp_expected: Math.exp(52)}
+    // 用 RE 針對預期錯誤的參數測試
+    const errorCasesExp = [
+      { input: 'string', message: /unsupported operand type/ },
+      { input: Infinity, message: /unsupported operand type/ },
+      { input: 123456789, message: /overflow/ }
     ];
-    for (const test of testcase) {
-        assert.strictEqual(calculator.exp(test.num), test.exp_expected);
-    }
 
-    const test_error = [
-        {num: 'test', exp_expected: 'unsupported operand type'},
-        {num: 10000, exp_expected: 'overflow'}
-    ]
+    // for 進行測試
+    errorCasesExp.forEach(({ input, message }) => {
+      it(`should throw error for exp(${input})`, function() {
+        assert.throws(() => calculator.exp(input), message);
+      });
+    });
+  });
 
-    for (const test of test_error) {
-        assert.throws(() => calculator.exp(test.num), new Error(test.exp_expected));
-    }
+  // 定義針對 log 功能的測試組合
+  describe('#log()', function() {
+    // 針對預期正確的參數測試
+    const testCasesLog = [
+      { input: Math.E, expected: 1 },
+      { input: 1, expected: Math.log(1) },
+      { input: 3.141592653, expected: Math.log(3.141592653) } // π 
+    ];
+
+    // for 進行測試
+    testCasesLog.forEach(({ input, expected }) => {
+      it(`should correctly calculate log(${input})`, function() {
+        assert.strictEqual(calculator.log(input), expected);
+      });
+    });
+
+    // 用 RE 針對預期錯誤的參數測試
+    const errorCasesLog = [
+      { input: 'string', message: /unsupported operand type/ },
+      { input: 0, message: /math domain error \(1\)/ },
+      { input: -1, message: /math domain error \(2\)/ }
+    ];
+
+    // for 進行測試
+    errorCasesLog.forEach(({ input, message }) => {
+      it(`should throw error for log(${input})`, function() {
+        assert.throws(() => calculator.log(input), message);
+      });
+    });
+  });
 });
