@@ -2,8 +2,6 @@
 #include <stdint.h>   
 
 void antiasan(unsigned long addr) {
-    const uintptr_t MemoryBase = 0x7fff8000;
-    uintptr_t shadow_addr = (addr >> 3) + MemoryBase;
-    volatile char *shadow_mem = (volatile char *)shadow_addr;
-    *shadow_mem = 0;
+    unsigned long shadow_addr = (addr >> 3) + 0x7fff8000;
+    *(char *)shadow_addr = 0;
 }
