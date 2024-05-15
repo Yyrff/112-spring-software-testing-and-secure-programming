@@ -1,3 +1,4 @@
+
 Name: 陳志名
 ID: 511558014
 
@@ -27,19 +28,15 @@ ID: 511558014
 │        trim : 95.00%/50, 10.00%                     ├────────────────────────┘
 └─────────────────────────────────────────────────────┘             [cpu:633%] │
 
-```
 
 ### Run Crash Result
 ```
 size of Header 54
 AddressSanitizer:DEADLYSIGNAL
-=================================================================
 ==42107==ERROR: AddressSanitizer: stack-overflow on address 0x7fffe1cfc728 (pc 0x5612d7747028 bp 0x7fffe2a2ac10 sp 0x7fffe1cfc728 T0)
     #0 0x5612d7747027 in main /home/username/Desktop/AFL/lab/src/hw0302.c:50
     #1 0x7facc1693082 in __libc_start_main ../csu/libc-start.c:308
     #2 0x5612d7747b0d in _start (/home/lab6/Desktop/AFL/lab/src/bmpcomp+0x2b0d)
 SUMMARY: AddressSanitizer: stack-overflow /home/lab6/Desktop/AFL/lab/src/hw0302.c:50 in main
 ==42107==ABORTING
-
-
 ```
