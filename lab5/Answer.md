@@ -55,7 +55,6 @@ int main() {
 ```
 ### ASan Report
 ```
-=================================================================
 ==5758==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x603000000054 at pc 0x5577de82c1c7 bp 0x7ffd37d7b170 sp 0x7ffd37d7b168 
 WRITE of size 4 at 0x603000000054 thread T0                                  
     #0 0x5577de82c1c6 in main /root/Desktop/lab5/Heap_out-of-bounds.c:5
@@ -134,7 +133,6 @@ int main() {
 ```
 ### ASan Report
 ```
-=================================================================
 ==5786==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7fff0af375e4 at pc 0x562beac86234 bp 0x7fff0af375a0 sp 0x7fff0af37598
 WRITE of size 4 at 0x7fff0af375e4 thread T0                                  
     #0 0x562beac86233 in main /root/Desktop/lab5/Stack_out-of-bounds.c:5
@@ -215,7 +213,6 @@ int main() {
 ```
 ### ASan Report
 ```
-=================================================================
 ==5811==ERROR: AddressSanitizer: global-buffer-overflow on address 0x55d944b8e0f4 at pc 0x55d944b8b1b4 bp 0x7ffca91a06a0 sp 0x7ffca91a0698 
 WRITE of size 4 at 0x55d944b8e0f4 thread T0                                  
     #0 0x55d944b8b1b3 in main /root/Desktop/lab5/Global_out-of-bounds.c:6
@@ -300,7 +297,6 @@ int main() {
 ```
 ### ASan Report
 ```
-=================================================================
 ==5833==ERROR: AddressSanitizer: heap-use-after-free on address 0x602000000010 at pc 0x56474ad9c1bf bp 0x7ffc9fa195f0 sp 0x7ffc9fa195e8 
 WRITE of size 4 at 0x602000000010 thread T0                                  
     #0 0x56474ad9c1be in main /root/Desktop/lab5/Use-after-free.c:6
@@ -404,7 +400,6 @@ zsh: segmentation fault  valgrind ./Use-after-return
 ```
 ### ASan Report
 ```
-=================================================================
 ==7099==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x5636e0fbb1b8 bp 0x000000000001 sp 0x7ffe89c3a330 T0)                        
 ==7099==The signal is caused by a READ memory access.                        
 ==7099==Hint: address points to the zero page.
