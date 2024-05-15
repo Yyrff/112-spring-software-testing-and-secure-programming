@@ -23,13 +23,15 @@ gcc version 10.2.1 20210110 (Debian 10.2.1-6)
 ### Heap out-of-bounds
 #### Source code
 ```
+#include <stdio.h>
 #include <stdlib.h>
 
-int main() {
-    int *ptr = (int *)malloc(5 * sizeof(int));
-    ptr[5] = 10; 
-    free(ptr);
-    return 0;
+int main(int argc, char **argv) {
+  int *array = (int*)malloc(100 * sizeof(int));
+  array[0] = 0;
+  int res = array[argc + 200];
+  free(array);
+  return res;
 }
 ```
 #### Valgrind Report
@@ -109,11 +111,12 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 #### Source code
 ```
 #include <stdio.h>
+#include <stdlib.h>
 
-int main() {
-    int arr[5];
-    arr[5] = 10; 
-    return 0;
+int main(int argc, char **argv) {
+  int stack_array[100];
+  stack_array[1] = 0;
+  return stack_array[argc + 100];
 }
 ```
 #### Valgrind Report
@@ -188,12 +191,11 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 #### Source code
 ```
 #include <stdio.h>
+#include <stdlib.h>
 
-int global[5];
-
-int main() {
-    global[5] = 10; 
-    return 0;
+int global_array[100] = {-1};
+int main(int argc, char **argv) {
+  return global_array[argc + 100];
 }
 ```
 #### Valgrind Report
@@ -262,13 +264,13 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 ### Use-after-free
 #### Source code
 ```
+#include <stdio.h>
 #include <stdlib.h>
 
-int main() {
-    int *ptr = (int *)malloc(sizeof(int));
-    free(ptr);
-    *ptr = 10; 
-    return 0;
+int main(int argc, char **argv) {
+  int *array = (int*)malloc(100 * sizeof(int));
+  free(array);
+  return array[argc];
 }
 ```
 #### Valgrind Report
@@ -355,17 +357,19 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 #### Source code
 ```
 #include <stdio.h>
+#include <stdlib.h>
 
-int *getPointer() {
-    int x = 42; 
-    return &x; 
+int *ptr;
+
+__attribute__((noinline))
+void FunctionThatEscapesLocalObject() {
+  int local[100];
+  ptr = &local[0];
 }
 
-int main() {
-    int *ptr = getPointer(); 
-    printf("Value: %d\n", *ptr);
-
-    return 0;
+int main(int argc, char **argv) {
+  FunctionThatEscapesLocalObject();
+  return ptr[argc];
 }
 ```
 #### Valgrind Report
@@ -418,21 +422,15 @@ SUMMARY: AddressSanitizer: SEGV /root/Desktop/lab5/Use-after-return.c:10 in main
 ### Source code
 ```
 #include <stdio.h>
-int main(void)
-{
-  int a[8];
-  int b[8];
+#include <stdlib.h>
 
-  a[16] = 100;
-
-  printf("a[16]: %d\n", a[16]);  
-  printf("b[0]: %d\n", b[0]);    
-
-  b[16] = 100;
-  printf("b[16]: %d\n", b[16]);   
-
-
-  return 0;
+int main(int argc, char **argv) {
+    int a = (int)malloc(8 * sizeof(int));
+    int b = (int)malloc(8 * sizeof(int));
+    int res = a[argc + 12];
+    free(a);
+    free(b);
+    return res; 
 }
 ```
 ### Why
